@@ -63,6 +63,9 @@
         </tr>
       {/each}
     </tbody>
+    <tfoot>
+      <tr><th colspan="5">{`${$selected.size} of ${stations.length} stations selected`}</th></tr>
+    </tfoot>
   </table>
 </div>
 
@@ -76,10 +79,18 @@
     @apply px-2 py-1;
   }
 
-  table thead {
-    inset-block-start: 0;
+  table thead,
+  table tfoot {
     position: sticky;
     @apply bg-slate-800;
+  }
+
+  table thead {
+    inset-block-start: 0;
+  }
+
+  table tfoot {
+    inset-block-end: 0;
   }
 
   table thead th {
