@@ -1,10 +1,17 @@
 <script>
+  import { slide } from "svelte/transition";
+  import { flip } from "svelte/animate";
   import { active, selected, toggle, reset } from "./stores/stations";
 
   export let stations;
 
   $: allSelected = $selected.size === stations.length;
   $: noneSelected = $selected.size === 0;
+
+  $: sortedStations = [
+    ...stations.filter((station) => $selected.has(station.id)),
+    ...stations.filter((station) => !$selected.has(station.id)),
+  ];
 
   function toggleAll() {
     if (allSelected) {
@@ -34,8 +41,10 @@
       </tr>
     </thead>
     <tbody>
-      {#each stations as station (station.id)}
+      {#each sortedStations as station (station.id)}
         <tr
+          transition:slide
+          animate:flip={{ duration: 200 }}
           class:active={$active === station.id}
           on:pointerenter={() => active.set(station.id)}
           on:pointerleave={() => active.set(null)}
