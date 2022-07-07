@@ -1,7 +1,7 @@
 <script>
   import * as d3 from "d3";
   import germany from "../assets/germany.geo.json";
-  import { active, selected, toggle } from "./stores/stations";
+  import { active, multiToggle, selected, toggle } from "./stores/stations";
 
   export let padding = 20;
   export let stations;
@@ -16,13 +16,21 @@
     germany
   );
   $: path = d3.geoPath(projection);
+
+  function selectState(state) {
+    const ids = stations.features
+          .filter((station) => station.properties.state === state)
+          .map((station) => station.properties.id);
+    multiToggle(new Set(ids));
+  }
 </script>
 
 <div id="container" class="w-full h-full" bind:clientWidth={width} bind:clientHeight={height}>
   <svg class="w-full h-full">
-    {#each germany.features as feature (feature.properties.id)}
-      <path class="state" d={path(feature)}>
-        <title>{feature.properties.name}</title>
+    {#each germany.features as state (state.properties.id)}
+      {@const { name } = state.properties}
+      <path class="state" d={path(state)} on:click={() => selectState(name)}>
+        <title>{name}</title>
       </path>
     {/each}
     {#each stations.features as station (station.properties.id)}
