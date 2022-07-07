@@ -1,6 +1,7 @@
 <script>
   import * as d3 from "d3";
   import germany from "../assets/germany.geo.json";
+  import { active, selected, toggle } from "./stores/stations";
 
   export let padding = 20;
   export let stations;
@@ -25,9 +26,19 @@
       </path>
     {/each}
     {#each stations.features as station (station.properties.id)}
+      {@const { id, name } = station.properties}
       {@const [cx, cy] = projection(station.geometry.coordinates)}
-      <circle class="station" {cx} {cy}>
-        <title>{station.properties.name}</title>
+      <circle
+        class="station"
+        class:active={$active === id}
+        class:selected={$selected.has(id)}
+        {cx}
+        {cy}
+        on:pointerenter={() => active.set(id)}
+        on:pointerleave={() => active.set(null)}
+        on:click={() => toggle(id)}
+      >
+        <title>{name}</title>
       </circle>
     {/each}
   </svg>
@@ -49,8 +60,17 @@
     r: 0.2rem;
   }
 
+  circle.station.selected {
+    fill: theme("colors.red.500");
+    r: 0.4rem;
+  }
+
+  circle.station.active {
+    fill: theme("colors.amber.500");
+    r: 0.4rem;
+  }
+
   circle.station:hover {
-    fill: theme("colors.green.500");
     r: 0.4rem;
   }
 </style>

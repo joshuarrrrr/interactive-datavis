@@ -1,11 +1,32 @@
 <script>
+  import { active, selected, toggle, reset } from "./stores/stations";
+
   export let stations;
+
+  $: allSelected = $selected.size === stations.length;
+  $: noneSelected = $selected.size === 0;
+
+  function toggleAll() {
+    if (allSelected) {
+      reset();
+    } else {
+      selected.set(new Set(stations.map((station) => station.id)));
+    }
+  }
 </script>
 
 <div>
   <table>
     <thead>
       <tr>
+        <th
+          ><input
+            type="checkbox"
+            checked={allSelected}
+            indeterminate={!allSelected && !noneSelected}
+            on:input={toggleAll}
+          /></th
+        >
         <th>id</th>
         <th>name</th>
         <th>height</th>
@@ -14,7 +35,18 @@
     </thead>
     <tbody>
       {#each stations as station (station.id)}
-        <tr>
+        <tr
+          class:active={$active === station.id}
+          on:pointerenter={() => active.set(station.id)}
+          on:pointerleave={() => active.set(null)}
+        >
+          <td
+            ><input
+              type="checkbox"
+              checked={$selected.has(station.id)}
+              on:click={() => toggle(station.id)}
+            /></td
+          >
           <td>{station.id}</td>
           <td>{station.name}</td>
           <td class="text-right">{station.height}</td>
@@ -51,5 +83,9 @@
 
   table tbody tr:nth-child(even) {
     @apply bg-slate-700;
+  }
+
+  tr.active td {
+    @apply bg-amber-500 text-slate-900;
   }
 </style>
