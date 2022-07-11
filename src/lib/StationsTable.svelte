@@ -1,7 +1,9 @@
 <script>
   import { selected } from "./stores/stations";
+  import { states } from "./states";
 
   export let stations;
+  const stateAbbrevs = new Map(states.map(({ name, short }) => [name, short]));
 
   function jumpToElement(id) {
     if (!id) return;
@@ -18,7 +20,6 @@
   <table class="w-full h-full">
     <thead>
       <tr>
-        <th>id</th>
         <th>name</th>
         <th>height</th>
         <th>state</th>
@@ -32,10 +33,9 @@
           class:selected={$selected === id}
           on:click={() => selected.set($selected === id ? null : id)}
         >
-          <td>{id}</td>
           <td>{name}</td>
           <td class="text-right">{height}</td>
-          <td>{state}</td>
+          <td><abbr title={state}>{stateAbbrevs.get(state)}</abbr></td>
         </tr>
       {/each}
     </tbody>

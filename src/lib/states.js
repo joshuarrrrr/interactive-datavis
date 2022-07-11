@@ -1,0 +1,18 @@
+export const states = [
+  { name: "Baden-Württemberg", short: "BW" },
+  { name: "Bayern", short: "BY" },
+  { name: "Berlin", short: "BE" },
+  { name: "Brandenburg", short: "BB" },
+  { name: "Bremen", short: "HB" },
+  { name: "Hamburg", short: "HH" },
+  { name: "Hessen", short: "HE" },
+  { name: "Mecklenburg-Vorpommern", short: "MV" },
+  { name: "Niedersachsen", short: "NI" },
+  { name: "Nordrhein-Westfalen", short: "NW" },
+  { name: "Rheinland-Pfalz", short: "RP" },
+  { name: "Saarland", short: "SL" },
+  { name: "Sachsen", short: "SN" },
+  { name: "Sachsen-Anhalt", short: "ST" },
+  { name: "Schleswig-Holstein", short: "SH" },
+  { name: "Thüringen", short: "TH" },
+];
