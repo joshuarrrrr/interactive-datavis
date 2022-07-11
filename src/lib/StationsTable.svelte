@@ -14,8 +14,8 @@
   $: jumpToElement($selected);
 </script>
 
-<div>
-  <table>
+<div class="min-w-fit h-full overflow-y-scroll">
+  <table class="w-full h-full">
     <thead>
       <tr>
         <th>id</th>
