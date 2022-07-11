@@ -1,7 +1,7 @@
 <script>
   import * as d3 from "d3";
   import germany from "../assets/germany.geo.json";
-  import { active, multiToggle, selected, toggle } from "./stores/stations";
+  import { selected } from "./stores/stations";
 
   export let padding = 20;
   export let stations;
@@ -16,20 +16,13 @@
     germany
   );
   $: path = d3.geoPath(projection);
-
-  function selectState(state) {
-    const ids = stations.features
-          .filter((station) => station.properties.state === state)
-          .map((station) => station.properties.id);
-    multiToggle(new Set(ids));
-  }
 </script>
 
 <div id="container" class="w-full h-full" bind:clientWidth={width} bind:clientHeight={height}>
   <svg class="w-full h-full">
     {#each germany.features as state (state.properties.id)}
       {@const { name } = state.properties}
-      <path class="state" d={path(state)} on:click={() => selectState(name)}>
+      <path class="state" d={path(state)}>
         <title>{name}</title>
       </path>
     {/each}
@@ -38,13 +31,10 @@
       {@const [cx, cy] = projection(station.geometry.coordinates)}
       <circle
         class="station"
-        class:active={$active === id}
-        class:selected={$selected.has(id)}
+        class:selected={$selected === id}
         {cx}
         {cy}
-        on:pointerenter={() => active.set(id)}
-        on:pointerleave={() => active.set(null)}
-        on:click={() => toggle(id)}
+        on:click={() => selected.set($selected === id ? null : id)}
       >
         <title>{name}</title>
       </circle>
@@ -70,11 +60,6 @@
 
   circle.station.selected {
     fill: theme("colors.red.500");
-    r: 0.4rem;
-  }
-
-  circle.station.active {
-    fill: theme("colors.amber.500");
     r: 0.4rem;
   }
 

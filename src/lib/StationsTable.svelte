@@ -1,39 +1,13 @@
 <script>
-  import { slide } from "svelte/transition";
-  import { flip } from "svelte/animate";
-  import { active, selected, toggle, reset } from "./stores/stations";
+  import { selected } from "./stores/stations";
 
   export let stations;
-
-  $: allSelected = $selected.size === stations.length;
-  $: noneSelected = $selected.size === 0;
-
-  $: sortedStations = [
-    ...stations.filter((station) => $selected.has(station.id)),
-    ...stations.filter((station) => !$selected.has(station.id)),
-  ];
-
-  function toggleAll() {
-    if (allSelected) {
-      reset();
-    } else {
-      selected.set(new Set(stations.map((station) => station.id)));
-    }
-  }
 </script>
 
 <div>
   <table>
     <thead>
       <tr>
-        <th
-          ><input
-            type="checkbox"
-            checked={allSelected}
-            indeterminate={!allSelected && !noneSelected}
-            on:input={toggleAll}
-          /></th
-        >
         <th>id</th>
         <th>name</th>
         <th>height</th>
@@ -41,31 +15,19 @@
       </tr>
     </thead>
     <tbody>
-      {#each sortedStations as station (station.id)}
+      {#each stations as station (station.id)}
+        {@const { id, name, height, state } = station}
         <tr
-          transition:slide
-          animate:flip={{ duration: 200 }}
-          class:active={$active === station.id}
-          on:pointerenter={() => active.set(station.id)}
-          on:pointerleave={() => active.set(null)}
+          class:selected={$selected === id}
+          on:click={() => selected.set($selected === id ? null : id)}
         >
-          <td
-            ><input
-              type="checkbox"
-              checked={$selected.has(station.id)}
-              on:click={() => toggle(station.id)}
-            /></td
-          >
-          <td>{station.id}</td>
-          <td>{station.name}</td>
-          <td class="text-right">{station.height}</td>
-          <td>{station.state}</td>
+          <td>{id}</td>
+          <td>{name}</td>
+          <td class="text-right">{height}</td>
+          <td>{state}</td>
         </tr>
       {/each}
     </tbody>
-    <tfoot>
-      <tr><th colspan="5">{`${$selected.size} of ${stations.length} stations selected`}</th></tr>
-    </tfoot>
   </table>
 </div>
 
@@ -105,7 +67,7 @@
     @apply bg-slate-700;
   }
 
-  tr.active td {
-    @apply bg-amber-500 text-slate-900;
+  tr.selected td {
+    @apply bg-red-500 text-white;
   }
 </style>
