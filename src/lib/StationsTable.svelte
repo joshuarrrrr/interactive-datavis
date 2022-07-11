@@ -6,7 +6,9 @@
   function jumpToElement(id) {
     if (!id) return;
     const element = document.getElementById(id);
-    element.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+    }
   }
 
   $: jumpToElement($selected);
@@ -54,10 +56,6 @@
     position: sticky;
     inset-block-start: 0;
     @apply bg-slate-800;
-  }
-
-  table tfoot {
-    inset-block-end: 0;
   }
 
   table thead th {
