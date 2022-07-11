@@ -20,13 +20,13 @@
 </script>
 
 <div id="container" class="w-full h-full" bind:clientWidth={width} bind:clientHeight={height}>
-  <svg class="w-full h-full">
+  <svg class="w-full h-full" on:click={() => (focus = null)}>
     {#each germany.features as feature (feature.properties.id)}
       {@const { id, name } = feature.properties}
       <path
         class="state"
         d={path(feature)}
-        on:click={() => {
+        on:click|stopPropagation={() => {
           focus = focus && focus.properties.id === id ? null : feature;
         }}
       >
