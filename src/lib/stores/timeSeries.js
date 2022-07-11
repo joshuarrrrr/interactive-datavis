@@ -2,7 +2,7 @@ import * as d3 from "d3";
 import { writable } from "svelte/store";
 import csv from "../../assets/data.csv?raw";
 
-export const timeSeries = writable([]);
+export const timeSeries = writable(new Map());
 export const timeRange = writable([undefined, undefined]);
 
 export function loadTimeSeriesData() {

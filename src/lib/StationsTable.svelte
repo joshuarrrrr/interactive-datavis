@@ -1,9 +1,15 @@
 <script>
+  import * as d3 from "d3";
   import { selected } from "./stores/stations";
   import { states } from "./states";
+  import { timeSeries, timeRange } from "./stores/timeSeries";
+  import Sparkline from "./Sparkline.svelte";
 
   export let stations;
   const stateAbbrevs = new Map(states.map(({ name, short }) => [name, short]));
+
+  const sparklineDays = 14;
+  $: sparklineStartDate = d3.timeDay.offset($timeRange[1] || new Date(), -sparklineDays);
 
   function jumpToElement(id) {
     if (!id) return;
@@ -21,6 +27,7 @@
     <thead>
       <tr>
         <th>name</th>
+        <th>temperature</th>
         <th>height</th>
         <th>state</th>
       </tr>
@@ -34,6 +41,17 @@
           on:click={() => selected.set($selected === id ? null : id)}
         >
           <td>{name}</td>
+          <td>
+            {#if $timeSeries.has(id)}
+              <Sparkline
+                data={$timeSeries
+                  .get(id)
+                  .filter((d) => d.date >= sparklineStartDate)
+                  .map((d) => ({ date: d.date, value: d.temperature_air_mean_200 }))}
+                color="white"
+              />
+            {/if}
+          </td>
           <td class="text-right">{height}</td>
           <td><abbr title={state}>{stateAbbrevs.get(state)}</abbr></td>
         </tr>
