@@ -14,8 +14,8 @@
   $: yScale = d3
     .scaleLinear()
     .domain([
-      d3.min(data, (d) => d.temperature_air_min_200),
-      d3.max(data, (d) => d.temperature_air_max_200),
+      d3.min(data, (d) => d.temperature_air_min_200 || d.temperature_air_mean_200),
+      d3.max(data, (d) => d.temperature_air_max_200 || d.temperature_air_mean_200),
     ])
     .range([height - margin.top - margin.bottom, margin.top])
     .nice();

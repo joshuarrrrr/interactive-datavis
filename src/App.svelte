@@ -9,21 +9,20 @@
 
   import * as d3 from "d3";
 
-  const numMonths = 4;
-
-  $: stationsData = d3.csvParse(csv, (d) => ({
-    id: d.station_id,
-    date: new Date(d.date),
-    temperature_air_min_200: +d.temperature_air_min_200,
-    temperature_air_mean_200: +d.temperature_air_mean_200,
-    temperature_air_max_200: +d.temperature_air_max_200,
+  $: stationsData = d3.csvParse(csv, (row) => ({
+    id: row.station_id,
+    date: new Date(row.date + "T00:00"),
+    temperature_air_min_200: Number.parseFloat(row.temperature_air_min_200),
+    temperature_air_mean_200: Number.parseFloat(row.temperature_air_mean_200),
+    temperature_air_max_200: Number.parseFloat(row.temperature_air_max_200),
   }));
 
-  $: dateDomain = d3.extent(stationsData, (d) => d.date);
+  const numMonths = 4;
+  $: dateEnd = d3.max(stationsData, (d) => d.date);
+  $: dateStart = d3.timeMonth.offset(dateEnd, -numMonths);
 
   function getStationTimeSeries(id) {
-    const minDate = d3.timeMonth.offset(dateDomain[1], -numMonths);
-    return stationsData.filter((d) => d.id === id && d.date > minDate);
+    return stationsData.filter((d) => d.id === id && d.date >= dateStart);
   }
 </script>
 
