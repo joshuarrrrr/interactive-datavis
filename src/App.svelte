@@ -9,6 +9,8 @@
 
   import * as d3 from "d3";
 
+  const numMonths = 4;
+
   $: stationsData = d3.csvParse(csv, (d) => ({
     id: d.station_id,
     date: new Date(d.date),
@@ -19,15 +21,8 @@
 
   $: dateDomain = d3.extent(stationsData, (d) => d.date);
 
-  $: temperatureDomain = [
-    d3.min(stationsData, (d) => d.temperature_air_min_200),
-    d3.max(stationsData, (d) => d.temperature_air_max_200),
-  ];
-
-  const numDays = 6 * 7;
-
   function getStationTimeSeries(id) {
-    const minDate = d3.timeDay.offset(dateDomain[1], -numDays);
+    const minDate = d3.timeMonth.offset(dateDomain[1], -numMonths);
     return stationsData.filter((d) => d.id === id && d.date > minDate);
   }
 </script>
@@ -39,7 +34,7 @@
   <div class="flex flex-col w-3/5 text-white">
     <StationsTable stations={stations.features.map((feat) => feat.properties)} />
     {#if $selected}
-      <TemperatureChart data={getStationTimeSeries($selected)} domain={temperatureDomain} />
+      <TemperatureChart data={getStationTimeSeries($selected)} />
     {/if}
   </div>
 </main>
