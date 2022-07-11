@@ -13,9 +13,16 @@
     .domain(d3.extent(data, (d) => d.date))
     .range([0, width - marginRight]);
   $: yScale = d3.scaleLinear().domain(domain).range([height, 0]);
+  $: area = d3
+    .area()
+    .defined((d) => !isNaN(d.temperature_air_min_200) && !isNaN(d.temperature_air_max_200))
+    .x((d) => xScale(d.date))
+    .y0((d) => yScale(d.temperature_air_min_200))
+    .y1((d) => yScale(d.temperature_air_max_200));
   $: line = d3
     .line()
     .curve(d3.curveLinear)
+    .defined((d) => !isNaN(d.temperature_air_mean_200))
     .x((d) => xScale(d.date))
     .y((d) => yScale(d.temperature_air_mean_200));
   $: xTicks = xScale.ticks(width / 100);
@@ -46,6 +53,8 @@
       {/each}
     </g>
 
+    <path id="area" d={area(data)} fill="black" stroke="none" />
+
     <path
       id="line"
       d={line(data)}
@@ -64,6 +73,11 @@
 
   svg {
     aspect-ratio: 16 / 9;
+  }
+
+  #area {
+    fill: theme("colors.slate.500");
+    opacity: 0.3;
   }
 
   #line {

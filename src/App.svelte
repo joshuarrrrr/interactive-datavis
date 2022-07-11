@@ -17,13 +17,18 @@
     temperature_air_max_200: +d.temperature_air_max_200,
   }));
 
+  $: dateDomain = d3.extent(stationsData, (d) => d.date);
+
   $: temperatureDomain = [
     d3.min(stationsData, (d) => d.temperature_air_min_200),
     d3.max(stationsData, (d) => d.temperature_air_max_200),
   ];
 
+  const numDays = 6 * 7;
+
   function getStationTimeSeries(id) {
-    return stationsData.filter((d) => d.id === id);
+    const minDate = d3.timeDay.offset(dateDomain[1], -numDays);
+    return stationsData.filter((d) => d.id === id && d.date > minDate);
   }
 </script>
 
