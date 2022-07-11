@@ -21,8 +21,11 @@
   $: dateEnd = d3.max(stationsData, (d) => d.date);
   $: dateStart = d3.timeMonth.offset(dateEnd, -numMonths);
 
-  function getStationTimeSeries(id) {
-    return stationsData.filter((d) => d.id === id && d.date >= dateStart);
+  function getStationTimeSeries(id, attributes) {
+    if (!attributes) return [];
+    return stationsData
+      .filter((d) => d.id === id && d.date >= dateStart)
+      .filter((d) => !attributes.every((attribute) => isNaN(d[attribute])));
   }
 </script>
 
@@ -33,7 +36,13 @@
   <div class="flex flex-col w-3/5 text-white">
     <StationsTable stations={stations.features.map((feat) => feat.properties)} />
     {#if $selected}
-      <TemperatureChart data={getStationTimeSeries($selected)} />
+      <TemperatureChart
+        data={getStationTimeSeries($selected, [
+          "temperature_air_min_200",
+          "temperature_air_mean_200",
+          "temperature_air_max_200",
+        ])}
+      />
     {/if}
   </div>
 </main>
