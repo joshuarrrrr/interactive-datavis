@@ -29,11 +29,11 @@
   }
 </script>
 
-<main class="flex flex-row w-screen h-screen gap-2 bg-slate-900">
+<main class="flex flex-row w-screen h-screen bg-slate-900">
   <div class="h-full grow">
     <StationsMap {stations} />
   </div>
-  <div class="flex flex-col w-3/5 text-white">
+  <div class="flex flex-col flex-initial w-3/5 text-white">
     <StationsTable stations={stations.features.map((feat) => feat.properties)} />
     {#if $selected}
       <TemperatureChart

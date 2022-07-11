@@ -36,7 +36,7 @@
 </script>
 
 <div id="container" class="w-full min-h-fit" bind:clientWidth={width} bind:clientHeight={height}>
-  <svg class="w-full">
+  <svg class="w-full h-full">
     {#if data.length}
       <g id="ticks-x">
         {#each xTicks as value (value)}

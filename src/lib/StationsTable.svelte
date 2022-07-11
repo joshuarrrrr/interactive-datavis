@@ -49,7 +49,7 @@
 
   th,
   td {
-    @apply px-2 py-1;
+    @apply p-1 select-none;
   }
 
   table thead {
