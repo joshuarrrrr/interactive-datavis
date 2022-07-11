@@ -7,22 +7,29 @@
   export let stations;
   let width = 0;
   let height = 0;
+  let focus = null;
 
   $: projection = d3.geoMercator().fitExtent(
     [
       [padding, padding],
       [width - padding, height - padding],
     ],
-    germany
+    focus !== null ? focus : germany
   );
   $: path = d3.geoPath(projection);
 </script>
 
 <div id="container" class="w-full h-full" bind:clientWidth={width} bind:clientHeight={height}>
   <svg class="w-full h-full">
-    {#each germany.features as state (state.properties.id)}
-      {@const { name } = state.properties}
-      <path class="state" d={path(state)}>
+    {#each germany.features as feature (feature.properties.id)}
+      {@const { id, name } = feature.properties}
+      <path
+        class="state"
+        d={path(feature)}
+        on:click={() => {
+          focus = focus && focus.properties.id === id ? null : feature;
+        }}
+      >
         <title>{name}</title>
       </path>
     {/each}
