@@ -2,6 +2,14 @@
   import { selected } from "./stores/stations";
 
   export let stations;
+
+  function jumpToElement(id) {
+    if (!id) return;
+    const element = document.getElementById(id);
+    element.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+  }
+
+  $: jumpToElement($selected);
 </script>
 
 <div>
@@ -18,6 +26,7 @@
       {#each stations as station (station.id)}
         {@const { id, name, height, state } = station}
         <tr
+          {id}
           class:selected={$selected === id}
           on:click={() => selected.set($selected === id ? null : id)}
         >
@@ -41,14 +50,10 @@
     @apply px-2 py-1;
   }
 
-  table thead,
-  table tfoot {
-    position: sticky;
-    @apply bg-slate-800;
-  }
-
   table thead {
+    position: sticky;
     inset-block-start: 0;
+    @apply bg-slate-800;
   }
 
   table tfoot {
