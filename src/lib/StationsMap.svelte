@@ -41,7 +41,7 @@
         class:selected={$selected === id}
         {cx}
         {cy}
-        on:click={() => selected.set($selected === id ? null : id)}
+        on:click|stopPropagation={() => selected.set($selected === id ? null : id)}
       >
         <title>{name}</title>
       </circle>
