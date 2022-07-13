@@ -1,10 +1,12 @@
 #!/usr/bin/env sh
 
-GITHUB_USER="joshuarrrrr"
-GITHUB_REPO="interactive-datavis"
-
 # abort on errors
 set -e
+
+# cleanup previous build
+rm -rdf dist || true
+
+REPO_URL=$(git config --get remote.origin.url)
 
 # build
 npm run build
@@ -24,6 +26,7 @@ git commit -m 'deploy'
 # git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git main
 
 # if you are deploying to https://<USERNAME>.github.io/<REPO>
-git push -f git@github.com:${GITHUB_USER}/${GITHUB_REPO}.git main:gh-pages
+echo $(git config --get remote.origin.url)
+git push -f ${REPO_URL} main:gh-pages
 
 cd -
